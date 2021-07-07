@@ -13,18 +13,18 @@ export default class EconomyCommand {
 
     const chat = await msg.getChat();
 
-    chat.sendStateTyping();
+    await chat.sendStateTyping();
 
     try {
       const { data }: IResponse = await axios.get<IServerData>(
-        `https://brasilapi.com.br/api/cep/v1/${setCep}`
+        `https://brasilapi.com.br/api/cep/v1/${setCep}`,
       );
 
       return msg.reply(
-        `*CEP*: ${data.cep}\n*Logradouro*: ${data.street}\n*Cidade*: ${data.city}\n*Bairro*: ${data.neighborhood}\n*UF*: ${data.state}`
+        `*CEP*: ${data.cep}\n*Logradouro*: ${data.street}\n*Cidade*: ${data.city}\n*Bairro*: ${data.neighborhood}\n*UF*: ${data.state}`,
       );
     } catch (error) {
-      return msg.reply(`CEP não localizado!`);
+      return msg.reply('CEP não localizado!');
     }
   }
 }

@@ -1,4 +1,4 @@
-import { client } from '../../server';
+import { client } from '../../services/whatsapp';
 import { company } from '../../config/integrantes.json';
 import type { Message, GroupChat } from 'whatsapp-web.js';
 
@@ -9,17 +9,17 @@ export default class QuoteCommand {
 
     const { user: contato } = user.id;
 
-    chat.sendStateTyping();
+    await chat.sendStateTyping();
 
     if (!chat.isGroup) {
       return msg.reply('Comando apenas para grupos!');
     }
 
-    company.map(async (valores) => {
-      if (valores.numero == contato) {
-        if (!valores.admin) {
+    company.map(async ({ numero, admin }) => {
+      if (numero == contato) {
+        if (!admin) {
           return msg.reply(
-            'Ops, você não tem permissão para executar este comando!'
+            'Ops, você não tem permissão para executar este comando!',
           );
         }
 
@@ -28,7 +28,7 @@ export default class QuoteCommand {
 
         for (const participant of chat.participants) {
           const contact = await client.getContactById(
-            participant.id._serialized
+            participant.id._serialized,
           );
 
           mentions.push(contact);
